@@ -1,0 +1,16 @@
+.dice {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border: 1px solid black;
+    margin: 5px;
+    font-size: 20px;
+}
+
+.selected {
+    background-color: yellow;
+}
+
+
