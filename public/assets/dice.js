@@ -1,42 +1,46 @@
-let diceValues = [];
-numberOfDice = 5;
+class Dice {
+    constructor() {
+        this.value = 0;
+        this.faces = [
+            'docs/design_system/dice1.png',
+            'docs/design_system/dice2.png',
+            'docs/design_system/dice3.png',
+            'docs/design_system/dice4.png',
+            'docs/design_system/dice5.png',
+            'docs/design_system/dice6.png' // Fixed this to dice6.png
+        ];
+    }
 
-function rollDie (numberOfDice){
-    const results = []
+    rollDie() {
+        this.value = Math.floor(1 + Math.random() * 6);
+    }
 
-    for (let i = 0; i < numberOfDice; i++) {
-        const roll = Math.floor(1 + Math.random() * 6);
-        diceValues.push(roll);
+    displayDie() {
+        return this.faces[this.value - 1];
     }
 }
 
-function rerollSelectedDice() {
-    const diceContainer = document.getElementById('diceContainer');
-    const diceElements = diceContainer.children;
-    for (let i = 0; i < numberOfDice; i++) {
-        if (diceElements[i].classList.contains('selected')) {
-            diceValues[i] = rollDice();
-            diceElements[i].classList.remove('selected');
-        }
+const diceContainer = document.getElementById("dice-container");
+
+function createDice() {
+    for (let i = 0; i < 5; i++) {
+        const die = new Dice();
+        die.rollDie();
+        
+        const dieElement = document.createElement('img');
+        dieElement.src = die.displayDie();
+        
+        diceContainer.appendChild(dieElement);
     }
-    displayDice();
 }
 
-function toggleSelection(event) {
-    event.target.classList.toggle('selected');
-}
 
-function displayDice() {
-    const diceContainer = document.getElementById('diceContainer');
-    diceContainer.innerHTML = '';
-    diceValues.forEach((value, index) => {
-        const diceElement = document.createElement('div');
-        diceElement.className = 'dice';
-        diceElement.innerText = value;
-        diceElement.onclick = toggleSelection;
-        diceContainer.appendChild(diceElement);
-    });
-}
+createDice();
+
+
+
+
+
 
 
 
