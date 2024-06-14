@@ -36,12 +36,3 @@ function createDice() {
 
 
 createDice();
-
-
-
-
-
-
-
-
-
