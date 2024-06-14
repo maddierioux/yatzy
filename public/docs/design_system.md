@@ -7,3 +7,7 @@ Font used: 'Trebuchet MS'
 
 Colours used: Black, White, #ff6f61
     FF6F61 is the same color used as an accent on the portfolio website, so we will continue the theme here in places that will need a spot of color. To make it easier, the dice faces themselves will be png images.  
+
+## Dice Documentation
+
+    The dice wil be visually represented by pngs. This will make is easier to change the images for rolling and rerolling, and will help to decrease the errors that could happening if we were to create the die by hand.
