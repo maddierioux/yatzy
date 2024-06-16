@@ -1,12 +1,14 @@
-class YatzyGame {
+import { Dice } from './dice.js';
+
+export class YatzyGame {
     constructor() {
         this.resetGame();
     }
 
     resetGame() {
         this.turn = 0;
-        this.dice = [0, 0, 0, 0, 0];
-        this.keep = [false, false, false, false, false];
+        this.dice = [new Dice(), new Dice(), new Dice(), new Dice(), new Dice(), new Dice()]; //Initializing the six dice using the Dice class
+        this.keep = [true, true, true, true, true]; //Initializing all dice to be kept at the start
     }
 
     rollDice() {
