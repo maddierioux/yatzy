@@ -18,6 +18,10 @@ export class Dice {
     displayDie() {
         return this.faces[this.value - 1];
     }
+
+    getValue() {
+        return this.value;
+    }
 }
 
 const diceContainer = document.getElementById("dice-container");
