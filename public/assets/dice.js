@@ -1,4 +1,4 @@
-export class Dice {
+class Dice {
     constructor() {
         this.value = 0;
         this.faces = [

@@ -57,4 +57,5 @@ export class YatzyGame {
     getDiceValues(){
         return this.dice.map(die => die.getValue);
     }
+    
 }
