@@ -3,9 +3,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const diceContainer = document.getElementById('dice-container');
     const rollDiceButton = document.getElementById('roll-dice');
-    const scoreboard = document.getElementById('scoreboard');
     const yatzyEngine = new YatzyEngine();
     const diceElements = [];
+    let currentTurn = 1;
+    const maxTurns = 13; // Total number of scoring categories
+    const scores = {};
 
 
     //Creates the dice (moved the code here)
@@ -50,8 +52,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function updateScoreboard() {
-        scoreboard.textContent = `Score: ${yatzyEngine.score}`; //Sets the score to the current score
+    // Update the scorecard display
+    function updateScorecard() {
+        for (let key in scores) {
+            const scoreSpan = document.getElementById(`score-${key}`);
+            if (scoreSpan) {
+                scoreSpan.textContent = scores[key];
+            }
+        }
+        const totalScore = Object.values(scores).reduce((acc, score) => acc + score, 0);
+        document.getElementById('total-score').textContent = totalScore;
+    }
+
+
+    function endTurn() {
+        const selectedScoreType = scoreTypeSelect.value;
+        if (!scores[selectedScoreType]) {
+            scores[selectedScoreType] = yatzyEngine.calculateScore(selectedScoreType);
+            yatzyEngine.updateOverallScore(selectedScoreType);
+            updateScorecard();
+            rollsLeft = 3;
+            yatzyEngine.resetRolls();
+            currentTurn++;
+            if (currentTurn > maxTurns) {
+                alert('Game over! Final score: ' + document.getElementById('total-score').textContent);
+                return;
+            }
+        } else {
+            alert('This score type has already been used. Please select another.');
+        }
     }
 
     rollDiceButton.addEventListener('click', () => {
@@ -62,17 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
-    //This one I am unsure (may need to change as to how yatzy actually works)
-    document.getElementById('score-type').addEventListener('change', (event) => {
-        const scoreType = event.target.value;
-        yatzyEngine.updateOverallScore(scoreType);
-        updateScoreboard();
-        yatzyEngine.resetRolls();
-    });
+    document.getElementById('next-turn').addEventListener('click', endTurn);
 
     initializeDice();
     renderDice();
-    updateScoreboard();
 });
 
