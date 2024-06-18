@@ -33,13 +33,3 @@ const diceContainer = document.getElementById("dice-container");
 //Removed the re roll button (could possibly just use the same button?)
 //Also removed the create_dice function and moved it to yatzy_game
 
-
-
-function rollAllDice() {
-    diceArray.forEach(({ die, dieElement }) => {
-        die.rollDie();
-        dieElement.src = die.displayDie();
-    });
-}
-
-document.getElementById('roll-dice').addEventListener('click', rollAllDice);

@@ -3,6 +3,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const diceContainer = document.getElementById('dice-container');
     const rollDiceButton = document.getElementById('roll-dice');
+    const scoreTypeSelect = document.getElementById('score-type');
     const yatzyEngine = new YatzyEngine();
     const diceElements = [];
     let currentTurn = 1;
@@ -22,6 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
             diceElements.push(dieElement);
             diceContainer.appendChild(dieElement);
         }
+    }
+    // Update potential scores display
+    function updatePotentialScores() {
+        const scoreItems = document.querySelectorAll('.score-item');
+        scoreItems.forEach(item => {
+            const scoreType = item.getAttribute('data-score');
+            if (!scores[scoreType]) { // Only update potential scores for unselected categories
+                const potentialScore = yatzyEngine.calculateScore(scoreType);
+                item.querySelector('span').textContent = potentialScore;
+            }
+        });
     }
 
     function reset_score(){
@@ -50,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         yatzyEngine.getDiceImages().forEach((image, index) => { //Loop through all the images 
             diceElements[index].src = image; //Make it such that dice element has the image given 
         });
+        updatePotentialScores();
     }
 
     // Update the scorecard display
@@ -76,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentTurn++;
             if (currentTurn > maxTurns) {
                 alert('Game over! Final score: ' + document.getElementById('total-score').textContent);
+                reset_score()
                 return;
             }
         } else {
