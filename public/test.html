@@ -1,18 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yatzy</title>
-    <link rel="stylesheet" type="text/css" href="assets/style.css">
-</head>
-<body>
-    <h1>Yatzy Game Test</h1>
-    <div id="dice-container"></div>
-    <script src="assets/dice.js"></script>
-    <script src="assets/yatzy_game.js"></script>
-    <script src="assets/yatzy_engine.js"></script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Yatzy</title>
+        <link rel="stylesheet" type="text/css" href="assets/style.css">
+    </head>
+    <body>
+        <h1>Yatzy Game Test</h1>
+        <div id="dice-container"></div>
+        <button id="reroll-button">Reroll Selected Dice</button>
+        <script src="assets/dice.js"></script>
+        <script src="assets/yatzy_game.js"></script>
 
-    
-<body>
+
+        <div id="scorecard">
+            <h1>Yatzy Scorecard</h1>
+            <div class="score-section">
+                <h2>Upper Section</h2>
+                <div class="score-item" data-score="ones">Ones: <span id="score-ones">0</span></div>
+                <div class="score-item" data-score="twos">Twos: <span id="score-twos">0</span></div>
+                <div class="score-item" data-score="threes">Threes: <span id="score-threes">0</span></div>
+                <div class="score-item" data-score="fours">Fours: <span id="score-fours">0</span></div>
+                <div class="score-item" data-score="fives">Fives: <span id="score-fives">0</span></div>
+                <div class="score-item" data-score="sixes">Sixes: <span id="score-sixes">0</span></div>
+            </div>
+            <div class="score-section">
+                <h2>Lower Section</h2>
+                <div class="score-item" data-score="three-of-a-kind">Three of a Kind: <span id="score-three-of-a-kind">0</span></div>
+                <div class="score-item" data-score="four-of-a-kind">Four of a Kind: <span id="score-four-of-a-kind">0</span></div>
+                <div class="score-item" data-score="full-house">Full House: <span id="score-full-house">0</span></div>
+                <div class="score-item" data-score="small-straight">Small Straight: <span id="score-small-straight">0</span></div>
+                <div class="score-item" data-score="large-straight">Large Straight: <span id="score-large-straight">0</span></div>
+                <div class="score-item" data-score="chance">Chance: <span id="score-chance">0</span></div>
+                <div class="score-item" data-score="yatzy">Yatzy: <span id="score-yatzy">0</span></div>
+            </div>
+            <div class="score-section">
+                <h2>Total Score</h2>
+                <div class="score-item">Total: <span id="total-score">0</span></div>
+            </div>
+        </div>
+
+
+
+
+
+    <body>
 </html>
