@@ -9,3 +9,7 @@
     height: 50px; 
     margin-right: 10px; /* Add some spacing between dice */
 }
+
+.selected {
+    border: 2px solid #FF6F61;
+}
