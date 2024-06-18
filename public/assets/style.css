@@ -9,6 +9,12 @@ body {
     width: 100%;
     background-color: #f0f0f0;
 }
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 
 header, footer {
     background-color: #333;
@@ -53,6 +59,20 @@ header, footer {
 #roll-dice:hover {
     background-color: #555;
 }
+
+#next-turn {
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 0.5em 1em;
+}
+
+#next-turn:hover {
+    background-color: #555;
+    
+}
+
 
 #scoreboard {
     margin-top: 1em;

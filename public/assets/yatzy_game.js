@@ -21,20 +21,42 @@ document.addEventListener('DOMContentLoaded', () => {
             diceContainer.appendChild(dieElement);
         }
     }
+
+    function reset_score(){
+        this.score = {
+            ones: null,
+            twos: null,
+            threes: null,
+            fours: null,
+            fives: null,
+            sixes: null,
+            onePair: null,
+            twoPairs: null,
+            threeOfAKind: null,
+            fourOfAKind: null,
+            fullHouse: null,
+            smallStraight: null,
+            largeStraight: null,
+            yahtzee: null,
+            chance: null,
+            totalScore: 0,
+            bonus: 0
+        }
+    }
     //renders the dice images based on their current values
     function renderDice() {
-        yatzyEngine.getDiceImages().forEach((image, index) => {
-            diceElements[index].src = image;
+        yatzyEngine.getDiceImages().forEach((image, index) => { //Loop through all the images 
+            diceElements[index].src = image; //Make it such that dice element has the image given 
         });
     }
 
     function updateScoreboard() {
-        scoreboard.textContent = `Score: ${yatzyEngine.score}`;
+        scoreboard.textContent = `Score: ${yatzyEngine.score}`; //Sets the score to the current score
     }
 
     rollDiceButton.addEventListener('click', () => {
         yatzyEngine.rollDice();
-        renderDice();
+        renderDice(); //Makes the dice as they should be 
         if (yatzyEngine.rollsLeft < 0) {
             alert('No rolls left. Select a score box.');
         }
