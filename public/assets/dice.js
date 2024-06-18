@@ -1,70 +1,45 @@
 class Dice {
     constructor() {
         this.value = 0;
+        this.selected = false; //Determines if the dice has been selected or not
         this.faces = [
             'docs/design_system/dice1.png',
             'docs/design_system/dice2.png',
             'docs/design_system/dice3.png',
             'docs/design_system/dice4.png',
             'docs/design_system/dice5.png',
-            'docs/design_system/dice6.png'
+            'docs/design_system/dice6.png' // Fixed this to dice6.png
         ];
-        this.selected = false; //Determines if the dice has been selected or not
     }
-   
+
     rollDie() {
-        this.value = Math.floor(1 + Math.random() * 6);
+        if (!this.selected) { //Only if we want to actually roll the die do we do it 
+            //By adding the above line I was able to remove a lot of the code below that ensures the die has to not be selected to be rolled. 
+            this.value = Math.floor(1 + Math.random() * 6);
+        }
     }
 
     displayDie() {
         return this.faces[this.value - 1];
     }
 
-    getValue() {
-        return this.value;
+    toggleHold() { //For when we want to change wether the dice is held or not 
+        this.selected = !this.selected;
     }
-}      
+}
 
 const diceContainer = document.getElementById("dice-container");
-const rerollButton = document.getElementById("reroll-button");
-let diceArray = [];
+
+//Removed the re roll button (could possibly just use the same button?)
+//Also removed the create_dice function and moved it to yatzy_game
 
 
-function createDice() {
 
-    diceArray = [];
-
-    for (let i = 0; i < 5; i++) {
-        const die = new Dice();
+function rollAllDice() {
+    diceArray.forEach(({ die, dieElement }) => {
         die.rollDie();
-        
-        const dieElement = document.createElement('img');
         dieElement.src = die.displayDie();
-        dieElement.className = 'die';
-        dieElement.addEventListener('click', () => toggleSelectDie(die,dieElement));
-
-        diceArray.push(die);
-        diceContainer.appendChild(dieElement);
-    }
+    });
 }
 
-function toggleSelectDie(die, dieElement){ //Toggles the selected property
-    die.selected = !die.selected;
-    dieElement.classList.toggle('selected', die.selected);
-}
-
-function rerollSelectedDie() {
-    for(i = 0; i< diceArray.length; i++){
-        if(diceArray[i].selected){
-
-            diceArray[i].rollDie();
-            diceContainer.children[i].src = diceArray[i].displayDie(); //Updates the image on the screen
-            diceArray[i].selected = false; //Reset the status of the die
-            diceContainer.children[i].classList.remove('selected') //Remove the highlighted status on the die
-        }
-    }
-}
-
-createDice();
-
-rerollButton.addEventListener('click', rerollSelectedDie);
+document.getElementById('roll-dice').addEventListener('click', rollAllDice);

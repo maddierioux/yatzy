@@ -1,61 +1,56 @@
-import { Dice } from './dice.js';
 
-export class YatzyGame {
-    constructor() {
-        this.resetGame();
-    }
+//Below ensures that we wait for the DOM content to be fully loaded 
+document.addEventListener('DOMContentLoaded', () => {
+    const diceContainer = document.getElementById('dice-container');
+    const rollDiceButton = document.getElementById('roll-dice');
+    const scoreboard = document.getElementById('scoreboard');
+    const yatzyEngine = new YatzyEngine();
+    const diceElements = [];
 
-    resetGame() {
-        this.turn = 0;
-        this.dice = [new Dice(), new Dice(), new Dice(), new Dice(), new Dice(), new Dice()]; //Initializing the six dice using the Dice class
-        this.keep = [true, true, true, true, true]; //Initializing all dice to be kept at the start
-        this.score = {
-            ones: null,
-            twos: null,
-            threes: null,
-            fours: null,
-            fives: null,
-            sixes: null,
-            onePair: null,
-            twoPairs: null,
-            threeOfAKind: null,
-            fourOfAKind: null,
-            fullHouse: null,
-            smallStraight: null,
-            largeStraight: null,
-            yahtzee: null,
-            chance: null,
-            totalScore: 0,
-            bonus: 0
-        }
-    }
 
-    rollDice() {
-        if (this.turn >= 3) return;
-        this.turn++;
+    //Creates the dice (moved the code here)
+    function initializeDice() {
         for (let i = 0; i < 5; i++) {
-            if (!this.keep[i]) {
-                this.dice[i].rollDie;
-            }
+            const dieElement = document.createElement('img');
+            dieElement.classList.add('dice');
+            dieElement.addEventListener('click', () => {
+                yatzyEngine.toggleHold(i);
+                dieElement.classList.toggle('selected');
+            });
+            diceElements.push(dieElement);
+            diceContainer.appendChild(dieElement);
         }
     }
+    //renders the dice images based on their current values
+    function renderDice() {
+        yatzyEngine.getDiceImages().forEach((image, index) => {
+            diceElements[index].src = image;
+        });
+    }
 
-    toggleKeep(index) {
-        if (index >= 0 && index < 5) {
-            this.keep[index] = !this.keep[index];
+    function updateScoreboard() {
+        scoreboard.textContent = `Score: ${yatzyEngine.score}`;
+    }
+
+    rollDiceButton.addEventListener('click', () => {
+        yatzyEngine.rollDice();
+        renderDice();
+        if (yatzyEngine.rollsLeft < 0) {
+            alert('No rolls left. Select a score box.');
         }
-    }
+    });
 
-    getGameState() {
-        return {
-            turn: this.turn,
-            dice: this.dice,
-            keep: this.keep
-        };
-    }
 
-    getDiceValues(){
-        return this.dice.map(die => die.getValue);
-    }
-    
-}
+    //This one I am unsure (may need to change as to how yatzy actually works)
+    document.getElementById('score-type').addEventListener('change', (event) => {
+        const scoreType = event.target.value;
+        yatzyEngine.updateOverallScore(scoreType);
+        updateScoreboard();
+        yatzyEngine.resetRolls();
+    });
+
+    initializeDice();
+    renderDice();
+    updateScoreboard();
+});
+
