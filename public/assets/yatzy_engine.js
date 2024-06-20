@@ -8,7 +8,7 @@ class YatzyEngine {
     }
 
     rollDice() {
-        if (this.rollsLeft >= 0) {
+        if (this.rollsLeft > 0) {
             this.dice.forEach(die => die.rollDie());
             this.rollsLeft--;
         }
@@ -16,6 +16,10 @@ class YatzyEngine {
 
     resetRolls() {
         this.rollsLeft = 3;
+    }
+
+    toggleAll(){
+        this.dice.forEach(die => die.untoggle());
     }
 
     toggleHold(index) {
@@ -69,7 +73,7 @@ class YatzyEngine {
                 } else {
                     return 0;
                 }
-            case 'threeOfAKind':
+            case 'three-of-a-kind':
                 let highestThree = 0;
                 for (let i = 0; i < 6; i++) {
                     if (counts[i] >= 3) {
@@ -77,7 +81,7 @@ class YatzyEngine {
                     }
                 }
                 return highestThree * 3;
-            case 'fourOfAKind':
+            case 'four-of-a-kind':
                 let highestFour = 0;
                 for (let i = 0; i < 6; i++) {
                     if (counts[i] >= 4) {
@@ -85,17 +89,28 @@ class YatzyEngine {
                     }
                 }
                 return highestFour * 4;
+
             case 'smallStraight':
-                if (counts[0] == 1 && counts[1] == 1 && counts[2] == 1 && counts[3] == 1 && counts[4] == 1) {
-                    return 15;
+                const uniqueSmallDice = [...new Set(dice)].sort(); //removes duplicates and sorts the orders 
+                if (uniqueSmallDice.length >= 4) { 
+                    for (let i = 0; i <= uniqueSmallDice.length - 4; i++) {
+                        if (uniqueSmallDice[i + 3] - uniqueSmallDice[i] === 3) { //Checks if there is 4 in a row of any values
+                            return 30;
+                        }
+                    }
                 }
                 return 0;
+                
+
             case 'largeStraight':
-                if (counts[1] == 1 && counts[2] == 1 && counts[3] == 1 && counts[4] == 1 && counts[5] == 1) {
-                    return 25;
+                const uniqueLargeDice = [...new Set(dice)].sort();//removes duplicates and sorts the orders 
+                if (uniqueLargeDice.length === 5 && uniqueLargeDice[4] - uniqueLargeDice[0] === 4) { //Checks if there is 4 in a row of any values
+                    return 40;
                 }
                 return 0;
-            case 'fullHouse':
+                
+
+            case 'full-house':
                 let pair = false;
                 let trio = false;
                 let pairTotal = 0;

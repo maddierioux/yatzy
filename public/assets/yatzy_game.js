@@ -46,11 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
             sixes: null,
             onePair: null,
             twoPairs: null,
-            threeOfAKind: null,
-            fourOfAKind: null,
-            fullHouse: null,
-            smallStraight: null,
-            largeStraight: null,
+            'three-of-a-kind': null,
+            'four-of-a-kind': null,
+            'full-house': null,
+            'small-straight': null,
+            'large-straight': null,
             yahtzee: null,
             chance: null,
             totalScore: 0,
@@ -73,8 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 scoreSpan.textContent = scores[key];
             }
         }
-        const totalScore = Object.values(scores).reduce((acc, score) => acc + score, 0);
-        document.getElementById('total-score').textContent = totalScore;
+        document.getElementById('total-score').textContent = yatzyEngine.score;
     }
 
 
@@ -84,8 +83,14 @@ document.addEventListener('DOMContentLoaded', () => {
             scores[selectedScoreType] = yatzyEngine.calculateScore(selectedScoreType);
             yatzyEngine.updateOverallScore(selectedScoreType);
             updateScorecard();
-            rollsLeft = 3;
+            yatzyEngine.toggleAll();
+            diceElements.forEach(dieElement => {
+                dieElement.classList.remove('selected');
+            });
+            rollsLeft = 3; //To counteract the fact that we are initally rolling for them 
             yatzyEngine.resetRolls();
+            yatzyEngine.rollDice();
+            renderDice();
             currentTurn++;
             if (currentTurn > maxTurns) {
                 alert('Game over! Final score: ' + document.getElementById('total-score').textContent);
@@ -98,11 +103,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     rollDiceButton.addEventListener('click', () => {
-        yatzyEngine.rollDice();
-        renderDice(); //Makes the dice as they should be 
-        if (yatzyEngine.rollsLeft < 0) {
+        if (yatzyEngine.rollsLeft === 0) {
             alert('No rolls left. Select a score box.');
         }
+        else{
+            yatzyEngine.rollDice();
+            renderDice(); //Makes the dice as they should be 
+        }   
     });
 
     document.getElementById('next-turn').addEventListener('click', endTurn);

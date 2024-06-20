@@ -26,10 +26,12 @@ class Dice {
     toggleHold() { //For when we want to change wether the dice is held or not 
         this.selected = !this.selected;
     }
+    untoggle(){
+        this.selected = false;
+    }
 }
 
 const diceContainer = document.getElementById("dice-container");
 
-//Removed the re roll button (could possibly just use the same button?)
-//Also removed the create_dice function and moved it to yatzy_game
+
 
