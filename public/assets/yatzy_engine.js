@@ -81,6 +81,8 @@ class YatzyEngine {
                     }
                 }
                 return highestThree * 3;
+
+
             case 'four-of-a-kind':
                 let highestFour = 0;
                 for (let i = 0; i < 6; i++) {
@@ -90,24 +92,19 @@ class YatzyEngine {
                 }
                 return highestFour * 4;
 
-            case 'smallStraight':
-                const uniqueSmallDice = [...new Set(dice)].sort(); //removes duplicates and sorts the orders 
-                if (uniqueSmallDice.length >= 4) { 
-                    for (let i = 0; i <= uniqueSmallDice.length - 4; i++) {
-                        if (uniqueSmallDice[i + 3] - uniqueSmallDice[i] === 3) { //Checks if there is 4 in a row of any values
-                            return 30;
-                        }
-                    }
+            case 'small-straight': //Checks if the player has the dice 1-2-3-4 or 2-3-4-5 or 3-4-5-6
+                if((counts[0] >= 1 && counts[1] >= 1 && counts[2] >= 1 && counts[3] >= 1 && counts[4] >= 1)|| (counts[1] >= 1 && counts[2] >= 1 && counts[3] >= 1 && counts[4] >= 1 && counts[5] >= 1) || (counts[2] >= 1 && counts[3] >= 1 && counts[4] >= 1 && counts[5] >= 1 && counts[6] >= 1)){
+                    return 30;
                 }
-                return 0;
-                
-
-            case 'largeStraight':
-                const uniqueLargeDice = [...new Set(dice)].sort();//removes duplicates and sorts the orders 
-                if (uniqueLargeDice.length === 5 && uniqueLargeDice[4] - uniqueLargeDice[0] === 4) { //Checks if there is 4 in a row of any values
+    
+                return 0; //If they don't have the correct combination, return 0
+    
+            case 'large-straight': //Checks if the player has the dice 2-3-4-5-6 or 1-2-3-4-5
+                if((counts[0] >= 1 && counts[1] >= 1 && counts[2] >= 1 && counts[3] >= 1 && counts[4] >= 1 && counts[5] >= 1)||( counts[1] == 1 && counts[2] == 1 && counts[3] == 1 && counts[4] == 1 && counts[5] == 1)) {
                     return 40;
                 }
-                return 0;
+    
+                return 0; //If they don't have the correct combination, return 0
                 
 
             case 'full-house':
@@ -142,6 +139,8 @@ class YatzyEngine {
     }
 
     updateOverallScore(scoreType) {
-        this.score += this.calculateScore(scoreType);
+        const score = this.calculateScore(scoreType);
+        this.score += score;
+        return this.score;
     }
 }

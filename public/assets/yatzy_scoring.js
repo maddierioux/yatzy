@@ -67,31 +67,19 @@ function calculateScore(game, scoreType) {
             }
             return highestFour*4;
     
+        case 'small-straight': //Checks if the player has the dice 1-2-3-4-5
+            if(counts[0] == 1 && counts[1] == 1 && counts[2] == 1 && counts[3] == 1 && counts[4] == 1) {
+                return 15;
+            }
 
-            case 'smallStraight':
-                // Small straight: 30 points if four of the dice have consecutive values
-                const smallStraights = [
-                    [1, 2, 3, 4],
-                    [2, 3, 4, 5],
-                    [3, 4, 5, 6]
-                ];
-                for (const pattern of smallStraights) {
-                    if (pattern.every(num => dice.includes(num))) {
-                        return 30;
-                    }
-                }
-                return 0;
-            case 'largeStraight':
-                // Large straight: 40 points if all five dice have consecutive values
-                const largeStraights = [
-                    [1, 2, 3, 4, 5],
-                    [2, 3, 4, 5, 6]
-                ];
-                for (const pattern of largeStraights) {
-                    if (pattern.every(num => dice.includes(num))) {
-                        return 40;
-                    }
-                }
+            return 0; //If they don't have the correct combination, return 0
+
+        case 'large-straight': //Checks if the player has the dice 2-3-4-5-6
+            if(counts[1] == 1 && counts[2] == 1 && counts[3] == 1 && counts[4] == 1 && counts[5] == 1) {
+                return 25;
+            }
+
+            return 0; //If they don't have the correct combination, return 0
 
         case 'full-house': //Checks if the player has a full house
             const pair = false;
