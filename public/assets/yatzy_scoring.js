@@ -48,7 +48,7 @@ function calculateScore(game, scoreType) {
             }
 
 
-        case 'threeOfAKind': //Checks what the highest group of 3 die
+        case 'three-of-a-kind': //Checks what the highest group of 3 die
             const highestThree = 0;
             for(i = 0; i < 6; i++){
                 if(counts[i] >= 3){
@@ -58,31 +58,42 @@ function calculateScore(game, scoreType) {
 
             return highestThree*3;
 
-        case 'fourOfAKind': //Checks what the highest group of 4 die
+        case 'four-of-a-kind': //Checks what the highest group of 4 die
             const highestFour = 0;
             for(i = 0; i < 6; i++){
                 if(counts[i] >= 4){
                     highestFour = i+1;
                 }
             }
-
             return highestFour*4;
+    
 
-        case 'smallStraight': //Checks if the player has the dice 1-2-3-4-5
-            if(counts[0] == 1 && counts[1] == 1 && counts[2] == 1 && counts[3] == 1 && counts[4] == 1) {
-                return 15;
-            }
+            case 'smallStraight':
+                // Small straight: 30 points if four of the dice have consecutive values
+                const smallStraights = [
+                    [1, 2, 3, 4],
+                    [2, 3, 4, 5],
+                    [3, 4, 5, 6]
+                ];
+                for (const pattern of smallStraights) {
+                    if (pattern.every(num => dice.includes(num))) {
+                        return 30;
+                    }
+                }
+                return 0;
+            case 'largeStraight':
+                // Large straight: 40 points if all five dice have consecutive values
+                const largeStraights = [
+                    [1, 2, 3, 4, 5],
+                    [2, 3, 4, 5, 6]
+                ];
+                for (const pattern of largeStraights) {
+                    if (pattern.every(num => dice.includes(num))) {
+                        return 40;
+                    }
+                }
 
-            return 0; //If they don't have the correct combination, return 0
-
-        case 'largeStraight': //Checks if the player has the dice 2-3-4-5-6
-            if(counts[1] == 1 && counts[2] == 1 && counts[3] == 1 && counts[4] == 1 && counts[5] == 1) {
-                return 25;
-            }
-
-            return 0; //If they don't have the correct combination, return 0
-
-        case 'fullHouse': //Checks if the player has a full house
+        case 'full-house': //Checks if the player has a full house
             const pair = false;
             const trio = false;
 

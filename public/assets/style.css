@@ -1,15 +1,86 @@
-#die-container {
-    display: flex; /* arrange the dice in a row */
-    justify-content: center; /* center the dice horizontally */
-    align-items: center; /* center the dice vertically */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    width: 100%;
+    background-color: #f0f0f0;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.die {
+
+header, footer {
+    background-color: #333;
+    color: white;
+    width: 100%;
+    text-align: center;
+}
+
+#game {
+    background-color: white;
+    padding: 2em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    width: 80%;
+    max-width: 600px;
+}
+
+#dice-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1em;
+}
+
+.dice {
     width: 50px;
-    height: 50px; 
-    margin-right: 10px; /* Add some spacing between dice */
+    height: 50px;
+    cursor: pointer;
 }
 
-.selected {
-    border: 2px solid #FF6F61;
+.dice.selected {
+    border: 2px solid red;
+}
+
+#roll-dice {
+    padding: 0.5em 1em;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#roll-dice:hover {
+    background-color: #555;
+}
+
+#next-turn {
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 0.5em 1em;
+}
+
+#next-turn:hover {
+    background-color: #555;
+    
+}
+
+
+#scoreboard {
+    margin-top: 1em;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+#score-type {
+    margin-top: 1em;
+    padding: 0.5em;
 }
