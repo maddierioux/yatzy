@@ -17,7 +17,7 @@ Welcome to Groups  23 Yatzy game! This game is a digital version of the classic 
 
 ## Screenshots
 
-![Initial State](docs/design_system/initial_state.png)
+![Initial State](docs/design_system/inital_state.png)
 ![After Rolling](docs/design_system/after_rolling.png)
 ![End of Game](docs/design_system/end_of_game.png)
 
