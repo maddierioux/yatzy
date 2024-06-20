@@ -36,27 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function reset_score(){
-        this.score = {
-            ones: null,
-            twos: null,
-            threes: null,
-            fours: null,
-            fives: null,
-            sixes: null,
-            onePair: null,
-            twoPairs: null,
-            'three-of-a-kind': null,
-            'four-of-a-kind': null,
-            'full-house': null,
-            'small-straight': null,
-            'large-straight': null,
-            yahtzee: null,
-            chance: null,
-            totalScore: 0,
-            bonus: 0
+    function reset_score() {
+        for (let key in scores) {
+            scores[key] = null;
         }
+        scores.totalScore = 0;
+        document.getElementById('total-score').textContent = scores.totalScore;
     }
+
     //renders the dice images based on their current values
     function renderDice() {
         yatzyEngine.getDiceImages().forEach((image, index) => { //Loop through all the images 
@@ -73,7 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 scoreSpan.textContent = scores[key];
             }
         }
-        document.getElementById('total-score').textContent = yatzyEngine.score;
+        const totalScore = Object.values(scores).reduce((acc, score) => acc + (score || 0), 0); // sums up all the scores
+        document.getElementById('total-score').textContent = totalScore;
     }
 
 
@@ -81,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedScoreType = scoreTypeSelect.value;
         if (!scores[selectedScoreType]) {
             scores[selectedScoreType] = yatzyEngine.calculateScore(selectedScoreType);
-            yatzyEngine.updateOverallScore(selectedScoreType);
             updateScorecard();
             yatzyEngine.toggleAll();
             diceElements.forEach(dieElement => {
