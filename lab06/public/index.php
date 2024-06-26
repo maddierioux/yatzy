@@ -1,10 +1,11 @@
 <?php
 require_once('_config.php');
 
-use Yatzy\Dice;
+use Yatzy\YatzyGame;
 
-$d = new Dice();
+$game = new YatzyGame();
 
-for ($i = 1; $i <= 5; $i++) {
-    echo "ROLL {$i}: {$d->roll()}<br>";
+for ($turn = 1; $turn <= 3; $turn++) {
+    $game->rollDice();
+    echo "Turn {$turn} Dice: " . implode(', ', $game->diceValues) . "<br>";
 }
