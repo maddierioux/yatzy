@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yatzy Game</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body onload="startGame()">
+    <header>
+        <h1>Yatzy Game</h1>
+    </header>
+    <main>
+        <section id="game">
+            <div id="dice-container"></div>
+            <button id="roll-dice" onclick="rollDice()">Roll Dice</button>
+            <select id="score-type">
+                <option value="ones">Ones</option>
+                <option value="twos">Twos</option>
+                <option value="threes">Threes</option>
+                <option value="fours">Fours</option>
+                <option value="fives">Fives</option>
+                <option value="sixes">Sixes</option>
+                <option value="three_of_a_kind">Three of a Kind</option>
+                <option value="four_of_a_kind">Four of a Kind</option>
+                <option value="small_straight">Small Straight</option>
+                <option value="large_straight">Large Straight</option>
+                <option value="full_house">Full House</option>
+                <option value="chance">Chance</option>
+                <option value="yatzy">Yatzy</option>
+            </select>
+
+            <div id="scorecard">
+                <h1>Yatzy Scorecard</h1>
+                <div class="score-section">
+                    <h2>Upper Section</h2>
+                    <div class="score-item" data-score="ones">Ones: <span id="score-ones">0</span></div>
+                    <div class="score-item" data-score="twos">Twos: <span id="score-twos">0</span></div>
+                    <div class="score-item" data-score="threes">Threes: <span id="score-threes">0</span></div>
+                    <div class="score-item" data-score="fours">Fours: <span id="score-fours">0</span></div>
+                    <div class="score-item" data-score="fives">Fives: <span id="score-fives">0</span></div>
+                    <div class="score-item" data-score="sixes">Sixes: <span id="score-sixes">0</span></div>
+                </div>
+                <div class="score-section">
+                    <h2>Lower Section</h2>
+                    <div class="score-item" data-score="three_of_a_kind">Three of a Kind: <span id="score-three_of_a_kind">0</span></div>
+                    <div class="score-item" data-score="four_of_a_kind">Four of a Kind: <span id="score-four_of_a_kind">0</span></div>
+                    <div class="score-item" data-score="full_house">Full House: <span id="score-full_house">0</span></div>
+                    <div class="score-item" data-score="small_straight">Small Straight: <span id="score-small_straight">0</span></div>
+                    <div class="score-item" data-score="large_straight">Large Straight: <span id="score-large_straight">0</span></div>
+                    <div class="score-item" data-score="chance">Chance: <span id="score-chance">0</span></div>
+                    <div class="score-item" data-score="yatzy">Yatzy: <span id="score-yatzy">0</span></div>
+                </div>
+                <div class="score-section">
+                    <h2>Total Score</h2>
+                    <div id="total-score">0</div>
+                </div>
+            </div>
+            <div class="button-container">
+                <button id="next-turn" onclick="nextTurn()">Next Turn</button>
+            </div>
+        </section>
+        
+    </main>
+    <script src="js/yatzy_game.js"></script>
+</body>
+</html>
+
+
+
