@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-require '../dice.php';
-require '../YatzyEngine.php';
-require '../YatzyGame.php';
+require 'dice.php';
+require 'YatzyEngine.php';
+require 'YatzyGame.php';
 
 use Yatzy\Dice;
 use Yatzy\YatzyEngine;
