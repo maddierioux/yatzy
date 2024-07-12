@@ -1,12 +1,14 @@
 <?php
 session_start();
 
+// Initialize the game state if it hasn't been set
 if (!isset($_SESSION['gameState'])) {
     initializeGame();
 }
 
 $action = $_GET['action'] ?? '';
 
+// Route the request to the appropriate function based on the action parameter
 switch ($action) {
     case 'rollDice':
         rollDice();
@@ -29,6 +31,7 @@ switch ($action) {
         echo json_encode(['error' => 'Invalid action']);
 }
 
+// Function to initialize the game state
 function initializeGame() {
     $_SESSION['gameState'] = [
         'dice' => [],
@@ -52,6 +55,7 @@ function initializeGame() {
     ]);
 }
 
+// Function to roll the dice and calculate score options
 function rollDice() {
     $dice = [];
     for ($i = 0; $i < 5; $i++) {
@@ -65,12 +69,13 @@ function rollDice() {
     ]);
 }
 
+// Function to place the score for the selected score type
 function placeScore($scoreType) {
     $dice = $_SESSION['gameState']['dice'];
     $scoreOptions = calculateScoreOptions($dice);
     $score = $scoreOptions[$scoreType];
     $_SESSION['gameState']['scores'][$scoreType] = $score;
-    $_SESSION['gameState']['usedScores'][$scoreType] = true;
+    $_SESSION['gameState']['usedScores'][$scoreType] = true; // Mark this score type as used
     $_SESSION['gameState']['totalScore'] += $score;
 
     echo json_encode([
@@ -80,6 +85,7 @@ function placeScore($scoreType) {
     ]);
 }
 
+// Function to calculate the possible score options based on the dice roll
 function calculateScoreOptions($dice) {
     $counts = array_count_values($dice);
     $scoreOptions = [
@@ -136,6 +142,7 @@ function calculateScoreOptions($dice) {
     return $scoreOptions;
 }
 
+// Function to save the score to the leaderboard
 function saveScore($score) {
     if (!isset($_SESSION['gameState']['leaderboard'])) {
         $_SESSION['gameState']['leaderboard'] = [];
@@ -148,10 +155,9 @@ function saveScore($score) {
     echo json_encode(['success' => true]);
 }
 
+// Function to get the leaderboard
 function getLeaderboard() {
     $leaderboard = $_SESSION['gameState']['leaderboard'] ?? [];
     echo json_encode(['leaderboard' => $leaderboard]);
 }
 ?>
-
-

@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Get elements from the DOM
     const rollDiceButton = document.getElementById('roll-dice');
     const diceContainer = document.getElementById('dice-container');
     const scoreTypeSelect = document.getElementById('score-type');
@@ -6,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const newGameButton = document.getElementById('new-game');
     const leaderboardList = document.getElementById('leaderboard');
 
+    // Mapping score types to their respective elements
     const scoreElements = {
         ones: document.getElementById('score-ones'),
         twos: document.getElementById('score-twos'),
@@ -25,10 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentRoll = [];
     let rollCount = 0;
 
+    // Add event listeners
     rollDiceButton.addEventListener('click', rollDice);
     nextTurnButton.addEventListener('click', nextTurn);
     newGameButton.addEventListener('click', newGame);
 
+    // Function to handle rolling the dice
     function rollDice() {
         if (rollCount >= 3) {
             alert('You have reached the maximum number of rolls. Please select a score.');
@@ -45,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    // Function to update the dice display
     function updateDice(dice) {
         diceContainer.innerHTML = '';
         dice.forEach(die => {
@@ -55,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Function to update the score options in the dropdown
     function updateScoreOptions(scoreOptions) {
         for (const [type, score] of Object.entries(scoreOptions)) {
             const safeType = CSS.escape(type);
@@ -65,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Function to handle selecting a score type and proceeding to the next turn
     function nextTurn() {
         const selectedScoreType = scoreTypeSelect.value;
         if (!currentRoll.length || !selectedScoreType) return;
@@ -78,7 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 rollCount = 0;
                 removeUsedScoreType(selectedScoreType);
                 clearScoreOptions();
-                console.log('Used Scores:', data.usedScores); // Debugging statementß
+
+                console.log('Used Scores:', data.usedScores); // Debugging statement
 
                 if (isGameOver(data.usedScores)) {
                     alert('Game over! Check your final score and start a new game.');
@@ -88,22 +96,26 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    // Function to update the score elements in the UI
     function updateScoreElements(scores) {
         for (const [type, score] of Object.entries(scores)) {
             scoreElements[type].textContent = score;
         }
     }
 
+    // Function to update the total score in the UI
     function updateTotalScore(totalScore) {
         document.getElementById('total-score').textContent = totalScore;
     }
 
+    // Function to clear the score options in the dropdown
     function clearScoreOptions() {
         scoreTypeSelect.querySelectorAll('option').forEach(option => {
             option.textContent = option.value.replace(/-/g, ' ');
         });
     }
 
+    // Function to disable a score type once it has been used
     function removeUsedScoreType(scoreType) {
         const option = scoreTypeSelect.querySelector(`option[value=${CSS.escape(scoreType)}]`);
         if (option) {
@@ -111,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Function to check if the game is over (all score types used)
     function isGameOver(usedScores) {
         // Check if all score types are used
         const allScoreTypes = [
@@ -121,8 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return allScoreTypes.every(type => usedScores[type]);
     }
 
-    
-
+    // Function to save the final score to the leaderboard
     function saveScore(score) {
         fetch(`http://localhost:8081/api/game.php?action=saveScore&score=${score}`)
             .then(response => response.json())
@@ -133,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    // Function to load the leaderboard from the server
     function loadLeaderboard() {
         fetch('http://localhost:8081/api/game.php?action=getLeaderboard')
             .then(response => response.json())
@@ -146,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    // Function to start a new game
     function newGame() {
         fetch('http://localhost:8081/api/game.php?action=newGame')
             .then(response => response.json())
@@ -161,9 +175,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    // Load the leaderboard on page load
     loadLeaderboard();
 });
-
 
 
 
