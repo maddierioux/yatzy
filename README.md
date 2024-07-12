@@ -8,6 +8,8 @@ Navigate to the yatzy folder after downloaded.
 
 Run the following command via the terminal **php -S localhost:8081**
 
+Open *http://localhost:8081* within a browser
+
 ## Fixes that still need to be made 
   * currenty leaderboard is not initalized to zero?
   * Cannot select on a die to hold it into the next turn
