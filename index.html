@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yatzy Game</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body onload="startGame()">
+<body>
     <header>
         <h1>Yatzy Game</h1>
     </header>
     <main>
         <section id="game">
             <div id="dice-container"></div>
-            <button id="roll-dice" onclick="rollDice()">Roll Dice</button>
+            <button id="roll-dice">Roll Dice</button>
             <select id="score-type">
                 <option value="ones">Ones</option>
                 <option value="twos">Twos</option>
@@ -21,15 +21,14 @@
                 <option value="fours">Fours</option>
                 <option value="fives">Fives</option>
                 <option value="sixes">Sixes</option>
-                <option value="three_of_a_kind">Three of a Kind</option>
-                <option value="four_of_a_kind">Four of a Kind</option>
-                <option value="small_straight">Small Straight</option>
-                <option value="large_straight">Large Straight</option>
-                <option value="full_house">Full House</option>
+                <option value="three-of-a-kind">Three of a Kind</option>
+                <option value="four-of-a-kind">Four of a Kind</option>
+                <option value="small-straight">Small Straight</option>
+                <option value="large-straight">Large Straight</option>
+                <option value="full-house">Full House</option>
                 <option value="chance">Chance</option>
                 <option value="yatzy">Yatzy</option>
             </select>
-
             <div id="scorecard">
                 <h1>Yatzy Scorecard</h1>
                 <div class="score-section">
@@ -43,11 +42,11 @@
                 </div>
                 <div class="score-section">
                     <h2>Lower Section</h2>
-                    <div class="score-item" data-score="three_of_a_kind">Three of a Kind: <span id="score-three_of_a_kind">0</span></div>
-                    <div class="score-item" data-score="four_of_a_kind">Four of a Kind: <span id="score-four_of_a_kind">0</span></div>
-                    <div class="score-item" data-score="full_house">Full House: <span id="score-full_house">0</span></div>
-                    <div class="score-item" data-score="small_straight">Small Straight: <span id="score-small_straight">0</span></div>
-                    <div class="score-item" data-score="large_straight">Large Straight: <span id="score-large_straight">0</span></div>
+                    <div class="score-item" data-score="three-of-a-kind">Three of a Kind: <span id="score-three-of-a-kind">0</span></div>
+                    <div class="score-item" data-score="four-of-a-kind">Four of a Kind: <span id="score-four-of-a-kind">0</span></div>
+                    <div class="score-item" data-score="full-house">Full House: <span id="score-full-house">0</span></div>
+                    <div class="score-item" data-score="small-straight">Small Straight: <span id="score-small-straight">0</span></div>
+                    <div class="score-item" data-score="large-straight">Large Straight: <span id="score-large-straight">0</span></div>
                     <div class="score-item" data-score="chance">Chance: <span id="score-chance">0</span></div>
                     <div class="score-item" data-score="yatzy">Yatzy: <span id="score-yatzy">0</span></div>
                 </div>
@@ -57,14 +56,19 @@
                 </div>
             </div>
             <div class="button-container">
-                <button id="next-turn" onclick="nextTurn()">Next Turn</button>
+                <button id="next-turn">Next Turn</button>
+                <button id="new-game">New Game</button>
             </div>
         </section>
-        
+        <aside>
+            <h2>Leaderboard</h2>
+            <ul id="leaderboard"></ul>
+        </aside>
     </main>
-    <script src="yatzy_game.js"></script>
+    <script src="assets/js/game.js"></script>
 </body>
 </html>
+
 
 
 
