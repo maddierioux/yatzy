@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Get elements from the DOM
     const rollDiceButton = document.getElementById('roll-dice');
     const diceContainer = document.getElementById('dice-container');
     const scoreTypeSelect = document.getElementById('score-type');
@@ -7,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const newGameButton = document.getElementById('new-game');
     const leaderboardList = document.getElementById('leaderboard');
 
-    // Mapping score types to their respective elements
     const scoreElements = {
         ones: document.getElementById('score-ones'),
         twos: document.getElementById('score-twos'),
@@ -25,42 +23,64 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let currentRoll = [];
+    let heldDice = [false, false, false, false, false];
     let rollCount = 0;
 
-    // Add event listeners
     rollDiceButton.addEventListener('click', rollDice);
     nextTurnButton.addEventListener('click', nextTurn);
     newGameButton.addEventListener('click', newGame);
 
-    // Function to handle rolling the dice
     function rollDice() {
         if (rollCount >= 3) {
             alert('You have reached the maximum number of rolls. Please select a score.');
             return;
         }
-
+    
         fetch('http://localhost:8081/api/game.php?action=rollDice')
-            .then(response => response.json())
-            .then(data => {
-                currentRoll = data.dice;
-                rollCount++;
-                updateDice(currentRoll);
-                updateScoreOptions(data.scoreOptions);
-            });
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text(); // Get response as text for debugging
+            })
+            .then(text => {
+                console.log('Raw Roll Dice Response:', text); // Log raw response
+                try {
+                    const data = JSON.parse(text); // Parse JSON
+                    console.log('Parsed Roll Dice Response:', data); // Log parsed response
+    
+                    currentRoll = data.dice;
+                    heldDice = data.heldDice;
+                    rollCount++;
+                    updateDice(currentRoll);
+                    updateScoreOptions(data.scoreOptions);
+                } catch (error) {
+                    console.error('Error parsing JSON:', error);
+                }
+            })
+            .catch(error => console.error('Fetch Error:', error)); // Log fetch error
     }
+    
 
-    // Function to update the dice display
     function updateDice(dice) {
         diceContainer.innerHTML = '';
-        dice.forEach(die => {
+        dice.forEach((die, index) => {
             const dieElement = document.createElement('div');
             dieElement.classList.add('dice');
+            if (heldDice[index]) {
+                dieElement.classList.add('held');
+            }
             dieElement.innerHTML = `<img src="assets/images/dice${die}.png" alt="Die">`;
+            dieElement.addEventListener('click', () => toggleHoldDie(index));
             diceContainer.appendChild(dieElement);
         });
     }
 
-    // Function to update the score options in the dropdown
+    function toggleHoldDie(index) {
+        heldDice[index] = !heldDice[index];
+        updateDice(currentRoll);
+    }
+
     function updateScoreOptions(scoreOptions) {
         for (const [type, score] of Object.entries(scoreOptions)) {
             const safeType = CSS.escape(type);
@@ -71,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Function to handle selecting a score type and proceeding to the next turn
     function nextTurn() {
         const selectedScoreType = scoreTypeSelect.value;
         if (!currentRoll.length || !selectedScoreType) return;
@@ -79,9 +98,11 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(`http://localhost:8081/api/game.php?action=placeScore&scoreType=${selectedScoreType}`)
             .then(response => response.json())
             .then(data => {
+                console.log('Place Score Response:', data); // Debugging statement
                 updateScoreElements(data.scores);
                 updateTotalScore(data.totalScore);
                 currentRoll = [];
+                heldDice = [false, false, false, false, false];
                 rollCount = 0;
                 removeUsedScoreType(selectedScoreType);
                 clearScoreOptions();
@@ -93,29 +114,26 @@ document.addEventListener('DOMContentLoaded', () => {
                     saveScore(data.totalScore);
                     loadLeaderboard();
                 }
-            });
+            })
+            .catch(error => console.error('Error:', error)); // Debugging statement
     }
 
-    // Function to update the score elements in the UI
     function updateScoreElements(scores) {
         for (const [type, score] of Object.entries(scores)) {
             scoreElements[type].textContent = score;
         }
     }
 
-    // Function to update the total score in the UI
     function updateTotalScore(totalScore) {
         document.getElementById('total-score').textContent = totalScore;
     }
 
-    // Function to clear the score options in the dropdown
     function clearScoreOptions() {
         scoreTypeSelect.querySelectorAll('option').forEach(option => {
             option.textContent = option.value.replace(/-/g, ' ');
         });
     }
 
-    // Function to disable a score type once it has been used
     function removeUsedScoreType(scoreType) {
         const option = scoreTypeSelect.querySelector(`option[value=${CSS.escape(scoreType)}]`);
         if (option) {
@@ -123,9 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Function to check if the game is over (all score types used)
     function isGameOver(usedScores) {
-        // Check if all score types are used
         const allScoreTypes = [
             'ones', 'twos', 'threes', 'fours', 'fives', 'sixes',
             'three-of-a-kind', 'four-of-a-kind', 'full-house', 'small-straight',
@@ -134,7 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return allScoreTypes.every(type => usedScores[type]);
     }
 
-    // Function to save the final score to the leaderboard
     function saveScore(score) {
         fetch(`http://localhost:8081/api/game.php?action=saveScore&score=${score}`)
             .then(response => response.json())
@@ -142,29 +157,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.success) {
                     alert('Score saved successfully!');
                 }
-            });
+            })
+            .catch(error => console.error('Error:', error)); // Debugging statement
     }
 
-    // Function to load the leaderboard from the server
     function loadLeaderboard() {
         fetch('http://localhost:8081/api/game.php?action=getLeaderboard')
             .then(response => response.json())
             .then(data => {
+                console.log('Leaderboard Response:', data); // Debugging statement
                 leaderboardList.innerHTML = '';
                 data.leaderboard.forEach(entry => {
                     const li = document.createElement('li');
                     li.textContent = `Score: ${entry.score}`;
                     leaderboardList.appendChild(li);
                 });
-            });
+            })
+            .catch(error => console.error('Error:', error)); // Debugging statement
     }
 
-    // Function to start a new game
     function newGame() {
         fetch('http://localhost:8081/api/game.php?action=newGame')
             .then(response => response.json())
             .then(data => {
+                console.log('New Game Response:', data); // Debugging statement
                 currentRoll = [];
+                heldDice = [false, false, false, false, false];
                 rollCount = 0;
                 updateScoreElements(data.scores);
                 updateTotalScore(data.totalScore);
@@ -172,12 +190,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     option.disabled = false;
                 });
                 loadLeaderboard();
-            });
+            })
+            .catch(error => console.error('Error:', error)); // Debugging statement
     }
 
-    // Load the leaderboard on page load
     loadLeaderboard();
 });
-
-
 

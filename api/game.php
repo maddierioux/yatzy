@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+// Debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Initialize the game state if it hasn't been set
 if (!isset($_SESSION['gameState'])) {
     initializeGame();
@@ -14,12 +19,20 @@ switch ($action) {
         rollDice();
         break;
     case 'placeScore':
-        $scoreType = $_GET['scoreType'];
-        placeScore($scoreType);
+        $scoreType = $_GET['scoreType'] ?? '';
+        if (!empty($scoreType)) {
+            placeScore($scoreType);
+        } else {
+            echo json_encode(['error' => 'Invalid score type']);
+        }
         break;
     case 'saveScore':
-        $score = $_GET['score'];
-        saveScore($score);
+        $score = $_GET['score'] ?? '';
+        if (!empty($score)) {
+            saveScore($score);
+        } else {
+            echo json_encode(['error' => 'Invalid score']);
+        }
         break;
     case 'getLeaderboard':
         getLeaderboard();
@@ -34,7 +47,8 @@ switch ($action) {
 // Function to initialize the game state
 function initializeGame() {
     $_SESSION['gameState'] = [
-        'dice' => [],
+        'dice' => [0, 0, 0, 0, 0],
+        'heldDice' => [false, false, false, false, false],
         'scores' => [
             'ones' => null, 'twos' => null, 'threes' => null, 'fours' => null, 'fives' => null, 'sixes' => null,
             'three-of-a-kind' => null, 'four-of-a-kind' => null, 'full-house' => null, 'small-straight' => null,
@@ -57,15 +71,26 @@ function initializeGame() {
 
 // Function to roll the dice and calculate score options
 function rollDice() {
-    $dice = [];
+    // Ensure that 'heldDice' exists and is an array
+    if (!isset($_SESSION['gameState']['heldDice']) || !is_array($_SESSION['gameState']['heldDice'])) {
+        $_SESSION['gameState']['heldDice'] = [false, false, false, false, false];
+    }
+
+    $dice = $_SESSION['gameState']['dice'];
+    $heldDice = $_SESSION['gameState']['heldDice'];
     for ($i = 0; $i < 5; $i++) {
-        $dice[] = rand(1, 6);
+        if (!$heldDice[$i]) {
+            $dice[$i] = rand(1, 6);
+        }
     }
     $_SESSION['gameState']['dice'] = $dice;
     $scoreOptions = calculateScoreOptions($dice);
+
+    header('Content-Type: application/json');
     echo json_encode([
         'dice' => $dice,
-        'scoreOptions' => $scoreOptions
+        'scoreOptions' => $scoreOptions,
+        'heldDice' => $heldDice
     ]);
 }
 
@@ -78,6 +103,7 @@ function placeScore($scoreType) {
     $_SESSION['gameState']['usedScores'][$scoreType] = true; // Mark this score type as used
     $_SESSION['gameState']['totalScore'] += $score;
 
+    header('Content-Type: application/json');
     echo json_encode([
         'scores' => $_SESSION['gameState']['scores'],
         'usedScores' => $_SESSION['gameState']['usedScores'],
@@ -152,12 +178,17 @@ function saveScore($score) {
         return $b['score'] - $a['score'];
     });
     $_SESSION['gameState']['leaderboard'] = array_slice($_SESSION['gameState']['leaderboard'], 0, 10);
+
+    header('Content-Type: application/json');
     echo json_encode(['success' => true]);
 }
 
 // Function to get the leaderboard
 function getLeaderboard() {
     $leaderboard = $_SESSION['gameState']['leaderboard'] ?? [];
+    header('Content-Type: application/json');
     echo json_encode(['leaderboard' => $leaderboard]);
 }
 ?>
+
+
