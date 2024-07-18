@@ -48,6 +48,10 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer; /* Ensure the dice are clickable */
+    border: 2px solid white; /* Default border for non-held dice */
+    opacity: 1; /* Default opacity for non-held dice */
+    transition: border-color 0.3s ease, opacity 0.3s ease; /* Smooth transition for border and opacity */
 }
 
 .dice img {
@@ -79,7 +83,7 @@ main {
 }
 
 aside {
-    background-color: white;
+    /*background-color: white;*/
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -89,4 +93,9 @@ aside {
 #leaderboard {
     list-style-type: none;
     padding: 0;
+}
+
+.dice.held {
+    opacity: 0.5; /* Reduced opacity for held dice */
+    border: 20px red
 }

@@ -35,7 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('You have reached the maximum number of rolls. Please select a score.');
             return;
         }
-    
+
+        console.log("Before fetch: ", heldDice);
+
         fetch('http://localhost:8081/api/game.php?action=rollDice')
             .then(response => {
                 if (!response.ok) {
@@ -48,9 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const data = JSON.parse(text); // Parse JSON
                     console.log('Parsed Roll Dice Response:', data); // Log parsed response
-    
+
                     currentRoll = data.dice;
+                    
                     heldDice = data.heldDice;
+                    console.log(data.heldDice);
+
                     rollCount++;
                     updateDice(currentRoll);
                     updateScoreOptions(data.scoreOptions);
@@ -60,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => console.error('Fetch Error:', error)); // Log fetch error
     }
-    
 
     function updateDice(dice) {
         diceContainer.innerHTML = '';
@@ -75,11 +79,13 @@ document.addEventListener('DOMContentLoaded', () => {
             diceContainer.appendChild(dieElement);
         });
     }
+    
 
     function toggleHoldDie(index) {
         heldDice[index] = !heldDice[index];
         updateDice(currentRoll);
     }
+    
 
     function updateScoreOptions(scoreOptions) {
         for (const [type, score] of Object.entries(scoreOptions)) {
@@ -195,5 +201,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     loadLeaderboard();
+    newGame();
 });
-

@@ -77,6 +77,7 @@ function rollDice() {
 
     $dice = $_SESSION['gameState']['dice'];
     $heldDice = $_SESSION['gameState']['heldDice'];
+    
     for ($i = 0; $i < 5; $i++) {
         if (!$heldDice[$i]) {
             $dice[$i] = rand(1, 6);
