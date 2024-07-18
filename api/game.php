@@ -2,9 +2,7 @@
 session_start();
 
 // Debugging
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+ini_set('display_errors', 0); // Disable displaying errors - This is what was causing errors 
 
 // Initialize the game state if it hasn't been set
 if (!isset($_SESSION['gameState'])) {
@@ -62,6 +60,8 @@ function initializeGame() {
         'totalScore' => 0,
         'leaderboard' => []
     ];
+
+    header('Content-Type: application/json');
     echo json_encode([
         'scores' => $_SESSION['gameState']['scores'],
         'usedScores' => $_SESSION['gameState']['usedScores'],
@@ -71,7 +71,6 @@ function initializeGame() {
 
 // Function to roll the dice and calculate score options
 function rollDice() {
-    // Ensure that 'heldDice' exists and is an array
     if (!isset($_SESSION['gameState']['heldDice']) || !is_array($_SESSION['gameState']['heldDice'])) {
         $_SESSION['gameState']['heldDice'] = [false, false, false, false, false];
     }
@@ -100,7 +99,7 @@ function placeScore($scoreType) {
     $scoreOptions = calculateScoreOptions($dice);
     $score = $scoreOptions[$scoreType];
     $_SESSION['gameState']['scores'][$scoreType] = $score;
-    $_SESSION['gameState']['usedScores'][$scoreType] = true; // Mark this score type as used
+    $_SESSION['gameState']['usedScores'][$scoreType] = true;
     $_SESSION['gameState']['totalScore'] += $score;
 
     header('Content-Type: application/json');
@@ -189,6 +188,4 @@ function getLeaderboard() {
     header('Content-Type: application/json');
     echo json_encode(['leaderboard' => $leaderboard]);
 }
-?>
-
 
