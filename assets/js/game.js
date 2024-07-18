@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         yatzy: document.getElementById('score-yatzy')
     };
 
-    let currentRoll = [];
+    let currentRoll = [0, 0, 0, 0, 0];
     let heldDice = [false, false, false, false, false];
     let rollCount = 0;
 
@@ -36,8 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+<<<<<<< Updated upstream
         console.log("Before fetch: ", heldDice);
 
+=======
+>>>>>>> Stashed changes
         fetch('http://localhost:8081/api/game.php?action=rollDice')
             .then(response => {
                 if (!response.ok) {
@@ -51,10 +54,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     const data = JSON.parse(text); // Parse JSON
                     console.log('Parsed Roll Dice Response:', data); // Log parsed response
 
+<<<<<<< Updated upstream
                     currentRoll = data.dice;
                     
                     heldDice = data.heldDice;
                     console.log(data.heldDice);
+=======
+                    // Update only non-held dice
+                    data.dice.forEach((die, index) => {
+                        if (!heldDice[index]) {
+                            currentRoll[index] = die;
+                        }
+                    });
+>>>>>>> Stashed changes
 
                     rollCount++;
                     updateDice(currentRoll);
@@ -107,7 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('Place Score Response:', data); // Debugging statement
                 updateScoreElements(data.scores);
                 updateTotalScore(data.totalScore);
-                currentRoll = [];
+                currentRoll = [0, 0, 0, 0, 0];
                 heldDice = [false, false, false, false, false];
                 rollCount = 0;
                 removeUsedScoreType(selectedScoreType);
@@ -156,17 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return allScoreTypes.every(type => usedScores[type]);
     }
 
-    function saveScore(score) {
-        fetch(`http://localhost:8081/api/game.php?action=saveScore&score=${score}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Score saved successfully!');
-                }
-            })
-            .catch(error => console.error('Error:', error)); // Debugging statement
-    }
-
     function loadLeaderboard() {
         fetch('http://localhost:8081/api/game.php?action=getLeaderboard')
             .then(response => response.json())
@@ -183,19 +184,57 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function newGame() {
-        fetch('http://localhost:8081/api/game.php?action=newGame')
+        // Save the current score before starting a new game
+        const totalScore = document.getElementById('total-score').textContent;
+        if (totalScore) {
+            saveScore(totalScore, () => {
+                // Start a new game after saving the score
+                fetch('http://localhost:8081/api/game.php?action=newGame')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('New Game Response:', data); // Debugging statement
+                        currentRoll = [0, 0, 0, 0, 0];
+                        heldDice = [false, false, false, false, false];
+                        rollCount = 0;
+                        updateScoreElements(data.scores);
+                        updateTotalScore(data.totalScore);
+                        scoreTypeSelect.querySelectorAll('option').forEach(option => {
+                            option.disabled = false;
+                        });
+                        loadLeaderboard();
+                    })
+                    .catch(error => console.error('Error:', error)); // Debugging statement
+            });
+        } else {
+            // Start a new game if there's no score to save
+            fetch('http://localhost:8081/api/game.php?action=newGame')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('New Game Response:', data); // Debugging statement
+                    currentRoll = [0, 0, 0, 0, 0];
+                    heldDice = [false, false, false, false, false];
+                    rollCount = 0;
+                    updateScoreElements(data.scores);
+                    updateTotalScore(data.totalScore);
+                    scoreTypeSelect.querySelectorAll('option').forEach(option => {
+                        option.disabled = false;
+                    });
+                    loadLeaderboard();
+                })
+                .catch(error => console.error('Error:', error)); // Debugging statement
+        }
+    }
+    
+    // Update saveScore to accept a callback
+    function saveScore(score, callback) {
+        fetch(`http://localhost:8081/api/game.php?action=saveScore&score=${score}`)
             .then(response => response.json())
             .then(data => {
-                console.log('New Game Response:', data); // Debugging statement
-                currentRoll = [];
-                heldDice = [false, false, false, false, false];
-                rollCount = 0;
-                updateScoreElements(data.scores);
-                updateTotalScore(data.totalScore);
-                scoreTypeSelect.querySelectorAll('option').forEach(option => {
-                    option.disabled = false;
-                });
-                loadLeaderboard();
+                if (data.success) {
+                    alert('Score saved successfully!');
+                    if (callback) callback(); // Call the callback function if provided
+                    loadLeaderboard(); // Refresh the leaderboard after saving the score
+                }
             })
             .catch(error => console.error('Error:', error)); // Debugging statement
     }
