@@ -2,15 +2,16 @@
 session_start();
 
 // Debugging
-
 ini_set('display_errors', 0); // Disable displaying errors - This is what was causing errors 
-ini_set('log_errors', 1); // Enable error logging
-ini_set('error_log', '/path/to/your/custom_error.log'); // Set the path to your custom error log file
-error_reporting(E_ALL); // Report all errors
 
 // Initialize the game state if it hasn't been set
 if (!isset($_SESSION['gameState'])) {
     initializeGame();
+}
+
+// Initialize leaderboard if not already set
+if (!isset($_SESSION['leaderboard'])) {
+    $_SESSION['leaderboard'] = [];
 }
 
 //$data = json_decode(file_get_contents('php://input'), true);
@@ -167,38 +168,48 @@ function calculateScoreOptions($dice) {
 
     $uniqueDice = array_keys($counts);
     sort($uniqueDice);
-    if ( $uniqueDice == [1, 2, 3, 4] || $uniqueDice == [2, 3, 4, 5] || $uniqueDice == [3, 4, 5, 6]) {
+    if (count($uniqueDice) >= 4 && ($uniqueDice == [1, 2, 3, 4] || $uniqueDice == [2, 3, 4, 5] || $uniqueDice == [3, 4, 5, 6])) {
         $scoreOptions['small-straight'] = 30;
     }
     if ($uniqueDice == [1, 2, 3, 4, 5] || $uniqueDice == [2, 3, 4, 5, 6]) {
         $scoreOptions['large-straight'] = 40;
     }
-    error_log('Dice: ' . json_encode($dice));
-    error_log('Unique Dice: ' . json_encode($uniqueDice));
-    error_log('Score Options: ' . json_encode($scoreOptions));
 
     return $scoreOptions;
 }
 
 // Function to save the score to the leaderboard
 function saveScore($score) {
-    if (!isset($_SESSION['gameState']['leaderboard'])) {
-        $_SESSION['gameState']['leaderboard'] = [];
+    // Ensure leaderboard is initialized in session
+    if (!isset($_SESSION['leaderboard'])) {
+        $_SESSION['leaderboard'] = [];
     }
-    $_SESSION['gameState']['leaderboard'][] = ['score' => $score];
-    usort($_SESSION['gameState']['leaderboard'], function($a, $b) {
-        return $b['score'] - $a['score'];
-    });
-    $_SESSION['gameState']['leaderboard'] = array_slice($_SESSION['gameState']['leaderboard'], 0, 10);
 
+    // Add new score to leaderboard
+    $_SESSION['leaderboard'][] = $score;
+
+    // Sort leaderboard in descending order and keep only the top 10 scores
+    rsort($_SESSION['leaderboard']);
+    $_SESSION['leaderboard'] = array_slice($_SESSION['leaderboard'], 0, 10);
+
+    // Respond with success
     header('Content-Type: application/json');
     echo json_encode(['success' => true]);
 }
 
+
 // Function to get the leaderboard
 function getLeaderboard() {
-    $leaderboard = $_SESSION['gameState']['leaderboard'] ?? [];
+    // Retrieve leaderboard from session
+    $leaderboard = $_SESSION['leaderboard'] ?? [];
+
+    // Format leaderboard for JSON response
+    $formattedLeaderboard = array_map(function($score) {
+        return ['score' => $score];
+    }, $leaderboard);
+
+    // Respond with leaderboard data
     header('Content-Type: application/json');
-    echo json_encode(['leaderboard' => $leaderboard]);
+    echo json_encode(['leaderboard' => $formattedLeaderboard]);
 }
 
