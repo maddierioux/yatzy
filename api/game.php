@@ -9,12 +9,15 @@ if (!isset($_SESSION['gameState'])) {
     initializeGame();
 }
 
+//$data = json_decode(file_get_contents('php://input'), true);
 $action = $_GET['action'] ?? '';
+
 
 // Route the request to the appropriate function based on the action parameter
 switch ($action) {
     case 'rollDice':
-        rollDice();
+        $held = json_decode($_GET['heldDice'], true);;
+        rollDice($held);
         break;
     case 'placeScore':
         $scoreType = $_GET['scoreType'] ?? '';
@@ -45,7 +48,7 @@ switch ($action) {
 // Function to initialize the game state
 function initializeGame() {
     $_SESSION['gameState'] = [
-        'dice' => [0, 0, 0, 0, 0],
+        'dice' => [1, 1, 1, 1, 1],
         'heldDice' => [false, false, false, false, false],
         'scores' => [
             'ones' => null, 'twos' => null, 'threes' => null, 'fours' => null, 'fives' => null, 'sixes' => null,
@@ -70,11 +73,13 @@ function initializeGame() {
 }
 
 // Function to roll the dice and calculate score options
-function rollDice() {
+function rollDice($held) {
     if (!isset($_SESSION['gameState']['heldDice']) || !is_array($_SESSION['gameState']['heldDice'])) {
         $_SESSION['gameState']['heldDice'] = [false, false, false, false, false];
     }
 
+    $_SESSION['gameState']['heldDice'] = $held;
+    
     $dice = $_SESSION['gameState']['dice'];
     $heldDice = $_SESSION['gameState']['heldDice'];
     

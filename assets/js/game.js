@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         yatzy: document.getElementById('score-yatzy')
     };
 
-    let currentRoll = [];
+    let currentRoll = [1,1,1,1,1];
     let heldDice = [false, false, false, false, false];
     let rollCount = 0;
 
@@ -36,9 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        console.log("Before fetch: ", heldDice);
+        fetch(`http://localhost:8081/api/game.php?action=rollDice&heldDice=${JSON.stringify(heldDice)}`)
 
-        fetch('http://localhost:8081/api/game.php?action=rollDice')
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -53,8 +52,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     currentRoll = data.dice;
                     
+                    if (typeof data.heldDice === 'string') {
+                        heldDice = JSON.parse(data.heldDice);
+                    } else {
+                        heldDice = data.heldDice;
+                    }
+
+
                     heldDice = data.heldDice;
-                    console.log(data.heldDice);
 
                     rollCount++;
                     updateDice(currentRoll);
@@ -102,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!currentRoll.length || !selectedScoreType) return;
 
         fetch(`http://localhost:8081/api/game.php?action=placeScore&scoreType=${selectedScoreType}`)
+        
             .then(response => response.json())
             .then(data => {
                 console.log('Place Score Response:', data); // Debugging statement
@@ -200,6 +206,5 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error:', error)); // Debugging statement
     }
 
-    loadLeaderboard();
-    newGame();
+    newGame(); //Load new game on load
 });
