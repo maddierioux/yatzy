@@ -2,7 +2,11 @@
 session_start();
 
 // Debugging
+
 ini_set('display_errors', 0); // Disable displaying errors - This is what was causing errors 
+ini_set('log_errors', 1); // Enable error logging
+ini_set('error_log', '/path/to/your/custom_error.log'); // Set the path to your custom error log file
+error_reporting(E_ALL); // Report all errors
 
 // Initialize the game state if it hasn't been set
 if (!isset($_SESSION['gameState'])) {
@@ -163,12 +167,15 @@ function calculateScoreOptions($dice) {
 
     $uniqueDice = array_keys($counts);
     sort($uniqueDice);
-    if (count($uniqueDice) >= 4 && ($uniqueDice == [1, 2, 3, 4] || $uniqueDice == [2, 3, 4, 5] || $uniqueDice == [3, 4, 5, 6])) {
+    if ( $uniqueDice == [1, 2, 3, 4] || $uniqueDice == [2, 3, 4, 5] || $uniqueDice == [3, 4, 5, 6]) {
         $scoreOptions['small-straight'] = 30;
     }
     if ($uniqueDice == [1, 2, 3, 4, 5] || $uniqueDice == [2, 3, 4, 5, 6]) {
         $scoreOptions['large-straight'] = 40;
     }
+    error_log('Dice: ' . json_encode($dice));
+    error_log('Unique Dice: ' . json_encode($uniqueDice));
+    error_log('Score Options: ' . json_encode($scoreOptions));
 
     return $scoreOptions;
 }

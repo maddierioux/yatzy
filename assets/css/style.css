@@ -54,6 +54,11 @@ main {
     transition: border-color 0.3s ease, opacity 0.3s ease; /* Smooth transition for border and opacity */
 }
 
+.dice.held {
+    border: 2px solid red;
+    border-radius: 5px;
+}
+
 .dice img {
     width: 100%;
     height: 100%;
@@ -95,7 +100,10 @@ aside {
     padding: 0;
 }
 
+<<<<<<< Updated upstream
 .dice.held {
     opacity: 0.5; /* Reduced opacity for held dice */
     border: 20px red
 }
+=======
+>>>>>>> Stashed changes
