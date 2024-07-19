@@ -22,11 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         yatzy: document.getElementById('score-yatzy')
     };
 
-<<<<<<< HEAD
     let currentRoll = [1,1,1,1,1];
-=======
-    let currentRoll = [0, 0, 0, 0, 0];
->>>>>>> refs/remotes/origin/main
     let heldDice = [false, false, false, false, false];
     let rollCount = 0;
 
@@ -40,17 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-<<<<<<< HEAD
         fetch(`http://localhost:8081/api/game.php?action=rollDice&heldDice=${JSON.stringify(heldDice)}`)
 
-=======
-<<<<<<< Updated upstream
         console.log("Before fetch: ", heldDice);
 
-=======
->>>>>>> Stashed changes
         fetch('http://localhost:8081/api/game.php?action=rollDice')
->>>>>>> refs/remotes/origin/main
+
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -63,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const data = JSON.parse(text); // Parse JSON
                     console.log('Parsed Roll Dice Response:', data); // Log parsed response
 
-<<<<<<< Updated upstream
                     currentRoll = data.dice;
                     
                     if (typeof data.heldDice === 'string') {
@@ -74,19 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                     heldDice = data.heldDice;
-<<<<<<< HEAD
-=======
                     console.log(data.heldDice);
-=======
                     // Update only non-held dice
                     data.dice.forEach((die, index) => {
                         if (!heldDice[index]) {
                             currentRoll[index] = die;
                         }
                     });
->>>>>>> Stashed changes
->>>>>>> refs/remotes/origin/main
-
                     rollCount++;
                     updateDice(currentRoll);
                     updateScoreOptions(data.scoreOptions);
